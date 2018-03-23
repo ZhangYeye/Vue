@@ -22,7 +22,7 @@
         <div class="type phone-login" :class="{setType:LoginType}">
           <div class="phone">
             <i class="iconfont icon-iconfontshouji" ></i>
-            <input type="text" maxlength="11" placeholder="手机/用户名/邮箱" v-model="phone">
+            <input type="text" maxlength="11" placeholder="手机/用户名/邮箱" v-model="phone1">
           </div>
           <div>
             <i class="iconfont icon-mimamw"></i>
@@ -33,23 +33,23 @@
         <div class="type message-login" :class="{setType:!LoginType}">
           <div class="phoned">
             <i class="iconfont icon-iconfontshouji"></i>
-            <input type="text" maxlength="11" placeholder="已注册的手机号" v-model="phone">
+            <input type="text" maxlength="11" placeholder="已注册的手机号" v-model="phone2">
           </div>
           <div class="imgCode">
             <i class="iconfont icon-mimamw"></i>
-            <input type="text" placeholder="请输入图片内容" v-model="code">
+            <input type="text" placeholder="请输入图片内容" v-model="captcha">
             <div class="Code" ><img src="http://localhost:3000/captcha" alt="" @click="getcaptcha"></div>
           </div>
           <div class="reactCode">
             <i class="iconfont icon-mimamw"></i>
-            <input type="text" placeholder="动态密码" v-model="actpwd">
+            <input type="text" placeholder="动态密码" v-model="code">
             <button v-show="!computedTime" class="getCode" :class="{right_phone:rightPhone}"
                     @click="getActCode">获取动态密码</button>
             <button v-show="computedTime" disabled="disabled" class="getCode">{{computedTime}}s</button>
           </div>
         </div>
         <p class="forget">忘记密码？</p>
-        <button>登录</button>
+        <button @click="login">登录</button>
       </div>
     </div>
     <div class="parter">
@@ -63,17 +63,18 @@
   </div>
 </template>
 <script>
-  import {sendCode} from '../../api'
+  import {sendCode,phoneLogin,actphoneLogin,captchas} from '../../api'
   import AlertTip from '../../components/AlertTip/AlertTip.vue'
   export default {
     data () {
       return{
         LoginType :true,
         computedTime:0,
-        phone:'',
+        phone1:'',
+        phone2:'',
         pwd:'',
         code:'',
-        actpwd:'',
+        captcha:'',
         showAlert:false,
         alertText:''
       }
@@ -81,7 +82,7 @@
     computed:{
       rightPhone () {
 //        以1开头的11 位数
-        return /^1\d{10}$/.test(this.phone)
+        return /^1\d{10}$/.test(this.phone2 || this.phone1)
       }
     },
     methods:{
@@ -109,13 +110,45 @@
             }
           },1000)
           // 发送ajax请，像手机发送验证码
-         /* const result = await sendCode(this.phone)
+          const result = await sendCode(this.phone2)
           if(result.code === 1){
             clearInterval(intervalId)
             // 显示提示框
             this.showAlert = true
             this.alertText = result.msg
-          }*/
+          }
+        }
+      },
+
+      /*点击登录*/
+      async login () {
+        let result
+        /*密码登录*/
+        if(this.LoginType){
+          const {phone1,pwd} = this
+          if(!this.rightPhone){
+            this.showAlert = true
+            this.alertText = '请输入正确的手机号'
+            return
+          }
+          result = await phoneLogin({phone1})
+        }else{
+          /*验证码登录*/
+          const {phone2,captcha,code} = this
+          if(!phone2){
+            this.showAlert = true
+            this.alertText = '请输入手机号'
+            return
+          }else if(!captcha){
+            this.showAlert = true
+            this.alertText = '请输入验证码'
+            return
+          }else if(!code){
+            this.showAlert = true
+            this.alertText = '请输入验证码'
+            return
+          }
+          result = await actphoneLogin({phone2,captcha,code})
         }
       }
     },

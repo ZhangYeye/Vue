@@ -119,14 +119,13 @@
                 height 100%
                 box-sizing border-box
                 margin 0 20px 0 10px
-                width  100px
-                border 1px solid #eee
+                width  90px
+                padding 5px 10px
+                border 2px solid #ccc
                 background #fff
-                overflow hidden
-                img
+                //overflow hidden
+                >img
                   height 100%
-                  margin 0 auto
-                  width auto;
               .name-address
                 float left
                 height 100%

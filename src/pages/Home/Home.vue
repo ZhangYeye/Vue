@@ -147,9 +147,6 @@
       closeAd (){
         this.showAd = false
         this.marginShow = true
-        this.$nextTick(() => {
-          this.scroll.refresh()
-        })
       },
       tabSwitch (event) {
         const tabs = [].slice.call(this.$refs.tabs.querySelectorAll('.tab-list'));

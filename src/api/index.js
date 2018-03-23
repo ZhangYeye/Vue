@@ -18,41 +18,14 @@ export const reqBrand = () => ajax('/list/brand')
 *
 * */
 export const reqAllBrand = () => ajax('/allbrands')
-/*发送动态验证码*/
-export const reqCaptchas = () => ajax('/captcha')
-/*获取图片验证码*/
+
+/*发送图片验证码*/
+export const captchas = () => ajax('/captcha')
+/*获取短信验证码*/
 export const sendCode = phone => ajax('/sendcode',{phone})
-/*手机号登录*/
-export const phoneLogin = ({phone,pwd}) => ajax('/phone_login',{phone,pwd},'POST')
 
-/*动态密码登录*/
-export const actphoneLogin = ({phone,code,actpwd}) => ajax('/actphone_login',{phone},'POST')
+/*手机号密码登录*/
+export const phoneLogin = ({phone,pwd}) => ajax('/login_pwd',{phone,pwd},'POST')
+/*手机动态密码登录*/
+export const actphoneLogin = ({phone,code,captcha}) => ajax('/login_sms',{phone,code,captcha},'POST')
 
-
-
-
-
-/*
-*
- * 账号密码登录
-export const pwdLogin = ({name,pwd,captcha}) => ajax('/api/login_pwd',{
-  name,
-  pwd,
-  captcha
-},'POST')
-
-/!**
- * 发送短信验证码
- *!/
-export const sendCode = phone => ajax('/api/sendcode',{phone})
-
-/!**
- * 手机号验证码登录
- *!/
-export const smsLogin =({phone,code}) => ajax('/api/login_sms',{phone,code},'POST')
-
-/!**
- * 获取用户信息(根据会话)
- *!/
-
-export const reqUser = () => ajax('/api/userinfo')*/

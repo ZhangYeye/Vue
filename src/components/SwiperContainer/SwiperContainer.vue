@@ -40,9 +40,10 @@
         display inline-block
         width 5px
         height 5px
+        border-radius 4px
         background #ffffff
         &.swiper-pagination-bullet-active
-          width 8px
+          width 10px
           height 5px
           transition transform .3s ease
           transform scaleX(2)
