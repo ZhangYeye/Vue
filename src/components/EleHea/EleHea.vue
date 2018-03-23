@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div class="header">
-      <i class="iconfont icon-jiantouarrowhead7 jiantou"></i>
+  <div class="header-item">
+    <div class="header-ele">
+      <i class="iconfont icon-jiantouarrowhead7 jiantou"
+         @click="$router.back()"></i>
       {{title}}
       <i class="iconfont icon-gallery fenlei" @click="toggleDetail"></i>
     </div>
@@ -47,46 +48,56 @@
       toggleDetail(){
         this.showDetail = !this.showDetail
       },
+      back () {
+
+      }
     }
   }
 </script>
 
 <style lang='stylus' rel='stylesheet/stylus'>
   @import '../../common/stylus/mixins.styl'
-  .header
-    text-align center
-    height 50px
-    line-height 50px
-    font-size 18px
-    border-bottom 1px solid gray
-    color #555
-    .jiantou
-      float left
-      margin-left 10px
-      font-size 20px
-      color #bbb
-    .fenlei
-      float right
-      margin-right 10px
-      font-size 20px
-      color #bbb
-  .show-detail
-    margin 10px 0
-    height 50px
-    display flex
-    box-sizing border-box
-    border-bottom 1px solid gray
-    overflow hidden
-    background #fff
-    .nav-item
-      flex 1
+  .header-item
+    width 100%
+    position fixed
+    top 0
+    z-index 500
+    .header-ele
+      width 100%
       text-align center
-      .iconfont
-        font-size 22px
-      .text
-        font-size 16px
-    &.collapse-enter,&.collapse-leave-to
-      height 0
-    &.collapse-enter-active,&.collapse-leave-active
-      transition height .5s linear
+      height 45px
+      line-height 45px
+      font-size 18px
+      border-bottom 1px solid gray
+      color #555
+      background #ffffff
+      .jiantou
+        float left
+        margin-left 10px
+        font-size 20px
+        color #bbb
+      .fenlei
+        float right
+        margin-right 10px
+        font-size 20px
+        color #bbb
+    .show-detail
+      padding-top 5px
+      height 50px
+      display flex
+      box-sizing border-box
+      border-bottom 1px solid gray
+      overflow hidden
+      background #fff
+      .nav-item
+        flex 1
+        text-align center
+        .iconfont
+          font-size 22px
+        .text
+          font-size 16px
+      &.collapse-enter,&.collapse-leave-to
+        height 0
+      &.collapse-enter-active,&.collapse-leave-active
+        transition height .5s linear
 </style>

@@ -1,10 +1,12 @@
 <template>
-  <div class="title">
-    <img src="../../common/images/miaosha1.jpg" alt="">
-  </div>
+
 </template>
 <script>
-  export default {}
+  export default {
+    props:{
+      miaosha:String
+    }
+  }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
   .title

@@ -2,31 +2,49 @@
   <div class="login-container">
     <div class="header-container">
       <div class="header">
-        <i class="iconfont icon-jiantouarrowhead7 jiantou"></i>
+        <i class="iconfont icon-jiantouarrowhead7 jiantou" @click="$router.back()"></i>
         <span class="zhuce">注册</span>
       </div>
       <div class="login-type">
-        <div class="mima">
+        <div class="mima" @click="setLoginType(true)">
           <span>普通登录</span>
-          <i class="iconfont icon-jiantouarrow492 show"></i>
+          <i class="iconfont icon-jiantouarrow492 " :class="{show:LoginType}"></i>
         </div>
-        <div class="name">
+        <div class="name" @click="setLoginType(false)">
           <span>手机动态密码登录</span>
-          <i class="iconfont icon-jiantouarrow492"></i>
+          <i class="iconfont icon-jiantouarrow492" :class="{show:!LoginType}"></i>
         </div>
       </div>
     </div>
     <div class="content">
       <div class="form">
-        <div class="phone">
-          <i class="iconfont icon-iconfontshouji"></i>
-          <input type="text" placeholder="手机/用户名/邮箱">
+        <div class="type phone-login" :class="{setType:LoginType}">
+          <div class="phone">
+            <i class="iconfont icon-iconfontshouji" ></i>
+            <input type="text" placeholder="手机/用户名/邮箱">
+          </div>
+          <div>
+            <i class="iconfont icon-mimamw"></i>
+            <input type="text" placeholder="输入密码">
+          </div>
         </div>
-        <div>
-          <i class="iconfont icon-mimamw"></i>
-          <input type="text" placeholder="输入密码">
+        <div class="type message-login" :class="{setType:!LoginType}">
+          <div class="phoned">
+            <i class="iconfont icon-iconfontshouji"></i>
+            <input type="text" placeholder="已注册的手机号">
+          </div>
+          <div class="imgCode">
+            <i class="iconfont icon-mimamw"></i>
+            <input type="text" placeholder="请输入图片内容">
+            <div class="Code"></div>
+          </div>
+          <div class="reactCode">
+            <i class="iconfont icon-mimamw"></i>
+            <input type="text" placeholder="动态密码">
+            <button class="getCode">获取动态密码</button>
+          </div>
         </div>
-        <div class="forget">忘记密码？</div>
+        <p class="forget">忘记密码？</p>
         <button>登录</button>
       </div>
     </div>
@@ -37,12 +55,21 @@
         <img src="../../common/images/qq.png" alt="">
       </div>
     </div>
-
   </div>
 </template>
 <script>
 
   export default {
+    data () {
+      return{
+        LoginType :true
+      }
+    },
+    methods:{
+      setLoginType (LoginType) {
+        this.LoginType = LoginType
+      }
+    }
 
   }
 </script>
@@ -105,23 +132,58 @@
           width 100%
           height 100%
           position relative
+          type
           >div
-            position relative
-            height 50px
-            line-height 50px
-            color #BCBCBC
-            font-size 12px
-            >.iconfont
-              position absolute
-              top -2px
-              left 0
-            >input
-              position absolute
-              top 15px
-              left 30px
-              outline none
-              border none
-              background #F5F5F5
+            display none
+            &.setType
+              display block
+            &.phone-login
+              >div
+                position relative
+                height 50px
+                line-height 50px
+                color #BCBCBC
+                font-size 12px
+                >.iconfont
+                  position absolute
+                  top -2px
+                  left 0
+                >input
+                  position absolute
+                  line-height 50px
+                  height 50px
+                  top 0px
+                  left 30px
+                  outline none
+                  border none
+                  background #F5F5F5
+            &.message-login
+              >div
+                position relative
+                height 50px
+                line-height 50px
+                color #BCBCBC
+                font-size 12px
+                .imgCode
+                  position absolute
+                  width 80px
+                  height 30px
+                  background red
+                  right 10px
+                  top 4px
+                &.reactCode
+                  position relative
+                  .getCode
+                    position absolute
+                    /*padding 5px 10px*/
+                    box-sizing border-box
+                    border 1px solid red
+                    color red
+                    border-radius 4px
+                    background transparent
+                    top 4px
+                    right 10px
+
           .forget
             position absolute
             right 5px

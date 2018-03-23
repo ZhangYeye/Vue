@@ -1,9 +1,10 @@
 <template>
-  <div class="container">
+  <div class="container-home">
     <!--头部-->
     <div class="header">
-      <div class="ad">
+      <div class="ad" v-if="showAd">
         <img src="../../common/images/adv.jpg">
+        <i class="iconfont icon-guanbi" @click="closeAd()"></i>
       </div><!--广告-->
       <div class="address">
         <span class="area">狗狗 | 北京
@@ -18,60 +19,64 @@
         </span>
       </div><!--地址跳转-->
       <div class="swiper-container nav">
-        <ul class="swiper-wrapper">
-          <li class="swiper-slide on">首页</li>
-          <li class="swiper-slide">狗狗主粮</li>
-          <li class="swiper-slide">服饰城</li>
-          <li class="swiper-slide">医疗保健</li>
-          <li class="swiper-slide">零时玩具</li>
-          <li class="swiper-slide">日用外出</li>
-          <li class="swiper-slide">美食香波</li>
+        <ul class="swiper-wrapper" ref="tabs" @click="tabSwitch">
+          <li class="tab-list swiper-slide "
+              v-for="(menu,index) in homepage.menus" :key="index" :class="{on:index === 0}">{{menu.menu_name}}</li>
         </ul>
       </div><!--首页导航-->
     </div>
     <!--主体-->
-    <div class="home-container">
+    <div class="home-container" :class="{ sub:marginShow === true}">
       <div class="content">
         <!--第一个轮播-->
-        <SwiperContainer/>
+        <SwiperContainer :dog_banner="homepage.dog_banner"/>
         <!--主体图片-->
         <div class="dogImg">
-          <img src="../../common/images/dog.jpg" alt=""></div><div class="navlist">
-        <ul class="item">
-          <li><img src="../../common/images/5a6991defe3616bb1208506f5f0d78da.jpg" alt=""></li>
-          <li><img src="../../common/images/420a7f62887b490aa7c627dc5364178d.jpg" alt=""></li>
-          <li><img src="../../common/images/b799562d3f7f8ca39769dc5fd1794a4a.jpg" alt=""></li>
-          <li><img src="../../common/images/dfa5a7598e3ee203c05f0f03fc182edc.jpg" alt=""></li>
-          <li><img src="../../common/images/038add951408054bafb01498e8d98635.jpg" alt=""></li>
-          <li><img src="../../common/images/5a6991defe3616bb1208506f5f0d78da.jpg" alt=""></li>
-          <li><img src="../../common/images/420a7f62887b490aa7c627dc5364178d.jpg" alt=""></li>
-          <li><img src="../../common/images/b799562d3f7f8ca39769dc5fd1794a4a.jpg" alt=""></li>
-          <li><img src="../../common/images/dfa5a7598e3ee203c05f0f03fc182edc.jpg" alt=""></li>
-          <li><img src="../../common/images/038add951408054bafb01498e8d98635.jpg" alt=""></li>
-        </ul>
+          <img :src="homepage.dog_img"></div>
+        <div class="navlist">
+          <ul class="item">
+          <li v-for="(me) in homepage.menu_list"><img :src="me" alt=""></li>
+        </ul></div><!--菜单-->
+        <!--miaosha-->
 
-
-      </div><!--菜单-->
-        <StaImg/>
         <!--秒杀-->
-        <MiaoSha/>
-        <StaImg/>
-        <!--品牌-->
-        <div class="pinpai">
-          <img src="../../common/images/bg_gif.gif" alt="">
+        <div class="title">
+          <img :src="homepage.miaosha" alt="">
         </div>
-        <StaImg/>
+        <MiaoSha/>
+
+        <!--品牌-->
+        <div class="title">
+          <img :src="homepage.brand_power" alt="">
+        </div>
+        <div class="pinpai">
+          <img :src="homepage.gif" alt="">
+        </div>
+
         <!--VIP列表-->
-        <SwiperContainer/>
-        <StaImg/>
+        <div class="title">
+          <img :src="homepage.vip" alt="">
+        </div>
+        <SwiperContainer02 :vip_services="homepage.vip_services"/>
+
         <!--大牌好货-->
-        <Haohuo/>
-        <StaImg/>
+        <div class="title">
+          <img :src="homepage.haohuo" alt="">
+        </div>
+
+        <Haohuo :haohuo="homepage.haohuo_list"/>
+
         <!--最惨状-->
+        <div class="title">
+          <img :src="homepage.dapaituan" alt="">
+        </div>
+
         <div class="bad">
           <img src="../../common/images/zuicanjiang-content.jpg@.jpg" alt="">
         </div>
-        <StaImg/>
+        <div class="title">
+          <img :src="homepage.dapaituan" alt="">
+        </div>
         <!--特别星球-->
         <div class="special">
           <div class="left"><img src="../../common/images/left.jpg" alt=""></div>
@@ -80,7 +85,9 @@
             <img src="../../common/images/right-2.jpg" alt="">
           </div>
         </div>
-        <StaImg/>
+        <div class="title">
+          <img :src="homepage.dapaituan" alt="">
+        </div>
         <!--特色栏目-->
         <Lanmu/>
         <div class="company">
@@ -111,37 +118,73 @@
 
   /*引入组件*/
   import SwiperContainer from '../../components/SwiperContainer/SwiperContainer.vue'
-  import StaImg from '../../components/StaImg/StaImg.vue'
+  import SwiperContainer02 from '../../components/SwiperContainer02/SwiperContainer02.vue'
   import MiaoSha from '../../components/MiaoSha/MiaoSha.vue'
   import Haohuo from '../../components/Haohuo/Haohuo.vue'
   import Lanmu from '../../components/Lanmu/Lanmu.vue'
-  export default {
-    mounted () {
-      new Swiper('.first>.swiper-container', {
-        loop:true,
-        pagination:{
-          el:'.swiper-pagination'
-        },
-        autoplay:{
-          delay:2500,
-          disableOnInteraction:false,
-        },
+  import BScroll from 'better-scroll'
 
+  import {mapActions,mapState} from 'vuex'
+  export default {
+    data () {
+      return {
+        showAd: true,
+        marginShow: false
+      }
+    },
+    mounted () {
+      this.getHomePages(() =>{
+        this.$nextTick(() => {
+          this._initScroll()
+        })
       })
-      new Swiper('.nav', {
-        slidesPerView: 5,
-        spaceBetween: 20,
-      });
-      new Swiper('.miao-container>.swiper-container',{
-        slidesPerView: 3.5,
-        spaceBetween: 10,
-      });
+    },
+    computed :{
+      ...mapState(['homepage'])
+    },
+    methods: {
+      ...mapActions(['getHomePages']),
+      closeAd (){
+        this.showAd = false
+        this.marginShow = true
+        this.$nextTick(() => {
+          this.scroll.refresh()
+        })
+      },
+      tabSwitch (event) {
+        const tabs = [].slice.call(this.$refs.tabs.querySelectorAll('.tab-list'));
+        tabs.forEach(t => {
+          t.classList.remove('on');
+        })
+        event.target.classList.add('on');
+      },
+      _initScroll () {
+        new Swiper('.first>.swiper-container', {
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination'
+          },
+          autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+          },
+
+        })
+        new Swiper('.nav', {
+          slidesPerView: 5,
+          spaceBetween: 20,
+        });
+        new Swiper('.miao-container>.swiper-container', {
+          slidesPerView: 3.5,
+          spaceBetween: 10,
+        });
+        this.scroll = new BScroll('.home-container')
+      }
 
     },
-
-    components:{
+    components: {
       SwiperContainer,
-      StaImg,
+      SwiperContainer02,
       MiaoSha,
       Haohuo,
       Lanmu
@@ -151,17 +194,27 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixins.styl'
-  .container
+  .container-home
     width 100%
     height 100%
     .header
       width 100%
+      position fixed
+      top 0
+      z-index 333
+      background #ffffff
       .ad
         width 100%
         height 60px
+        position relative
         img
           width 100%
           height 60px
+        .icon-guanbi
+          position absolute
+          top 20px
+          left 20px
+          font-size 28px
       .address
         width 100%
         height 50px
@@ -211,106 +264,118 @@
             &.on
               color #67AF5B
               border-bottom 3px solid #67AF5B
-    .content
-      width 100%
-      height 100%
-      .first
+    .home-container
+      margin-top 155px
+      height 667px
+      &.sub
+        margin-top 95px
+      .content
         width 100%
-        height 160px
-        .swiper-container
-          position relative
+        padding-bottom 35px
+        //height 100%
+        .first
           width 100%
           height 160px
-          .swiper-slide
-            >img
-              width 375px
-          .swiper-pagination
-            position absolute
-            bottom 10px
-            text-align center
-            transform translate3d(0,0,0)
-            >span
-              display inline-block
-              width 5px
-              height 5px
-              background #ffffff
-              &.swiper-pagination-bullet-active
-                width 8px
-                height 5px
-                transition transform .3s ease
-                transform scaleX(2)
-      .dogImg
-        width 100%
-        img
-          width 100%
-          height 270px
-      .navlist
-        width 100%
-        ul
-          overflow hidden
-          display flex
-          flex-wrap wrap
-          background #000
-          bottom-border-1px(#ffffff)
-          li
-            float left
-            flex 1
-            vertical-align middle
-            img
-              width 75px
-              height 94px
-      .pinpai
-        img
-          width 100%
-      .bad
-        width 100%
-        img
+          .swiper-container
+            position relative
             width 100%
-      .special
-        width 100%
-        display flex
-        background #000
-        .left
-          width 50%
-          img
-            width 100%
-            display block
-        .right
-          width 50%
-
-          img
-            width 100%
-            height 50%
-            display block
-
-      .company
-        width 100%
-        margin 20 auto
-        padding-bottom 60px
-        text-align center
-        p
-          line-height 30px
-          &.tabs
-            padding 0 25px
-            margin-top 20px
-            display flex
-            >span
+            height 160px
+            .swiper-slide
+              >img
+                width 375px
+            .swiper-pagination
+              position absolute
+              bottom 10px
               text-align center
-              margin 0 10px
-              flex 1
-              &.cur
-                color #ff0000
-          &.copyrights
-              display inline
-
+              transform translate3d(0,0,0)
               >span
                 display inline-block
+                width 5px
+                height 5px
+                background #ffffff
+                &.swiper-pagination-bullet-active
+                  width 8px
+                  height 5px
+                  transition transform .3s ease
+                  transform scaleX(2)
+        .dogImg
+          width 100%
+          img
+            width 100%
+            height 270px
+        .navlist
+          width 100%
+          ul
+            overflow hidden
+            display flex
+            flex-wrap wrap
+            background #000
+            bottom-border-1px(#ffffff)
+            li
+              float left
+              flex 1
+              vertical-align middle
+              img
+                width 75px
+                height 94px
+        .title
+          width 100%
+          //height 98px
+          img
+            width 100%
+            /*height 100%*/
+        .pinpai
+          img
+            width 100%
+        .bad
+          width 100%
+          img
+              width 100%
+        .special
+          width 100%
+          display flex
+          background #000
+          .left
+            width 50%
+            img
+              width 100%
+              display block
+          .right
+            width 50%
+
+            img
+              width 100%
+              height 50%
+              display block
+
+        .company
+          width 100%
+          margin 20 auto
+          //padding-bottom 60px
+          text-align center
+          p
+            line-height 30px
+            &.tabs
+              padding 0 25px
+              margin-top 20px
+              display flex
+              >span
+                text-align center
+                margin 0 10px
+                flex 1
+                &.cur
+                  color #ff0000
+            &.copyrights
+                display inline
+
+                >span
+                  display inline-block
 
     .catoon
       position: fixed;
       right: 0;
       bottom: 100px;
-      z-index 200
+      z-index 500
       width: 41px;
       height: 46px;
       background-image: url('../../common/images/godog.png');

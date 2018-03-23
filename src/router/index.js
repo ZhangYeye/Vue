@@ -5,8 +5,8 @@ import Home from '../pages/Home/Home.vue'
 import List from '../pages/List/List.vue'
 import Cart from '../pages/Cart/Cart.vue'
 import Mine from '../pages/Mine/Mine.vue'
-import Item from '../pages/Item/Item.vue'
-import Brand from '../pages/Brand/Brand.vue'
+import Item from '../pages/List/Item/Item.vue'
+import Brand from '../pages/List/Brand/Brand.vue'
 import AllBrands from '../pages/AllBrands/AllBrands.vue'
 
 
@@ -27,15 +27,29 @@ export default new VueRouter({
       meta: {
         FooterType:true
       },
+      children:[
+        {
+          path:'/list/brand',
+          component:Brand,
+          meta: {
+            FooterType:true
+          },
+        },
+        {
+          path:'/list/item',
+          component:Item,
+          meta: {
+            FooterType:true
+          },
+        },
+        {
+          path:'/',
+          redirect:'/list/item'
+        },
+      ]
     },
 
-    {
-      path:'/brand',
-      component:Brand,
-      meta: {
-        FooterType:true
-      },
-    },
+
     {
       path:'/cart',
       component:Cart

@@ -1,7 +1,7 @@
 <template>
   <div>
     <EleHea title="购物车"/>
-    <div class="content">
+    <div class="content-cart">
       <div class="cartfont">
         <i class="iconfont icon-gouwuche"></i>
       </div>
@@ -27,7 +27,7 @@
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-  .content
+  .content-cart
     text-align center
     .cartfont
       margin-top 80px

@@ -2,7 +2,7 @@
   <div class="first">
     <div class="swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="(item,index) in dog_banner" :key="index">
+        <div class="swiper-slide" v-for="(item,index) in vip_services" :key="index">
           <img :src="item">
         </div>
       </div>
@@ -19,7 +19,7 @@
 <script>
   export default {
       props:{
-        dog_banner:Array
+        vip_services:Array
       }
   }
 </script>
