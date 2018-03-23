@@ -18,6 +18,15 @@ export const reqBrand = () => ajax('/list/brand')
 *
 * */
 export const reqAllBrand = () => ajax('/allbrands')
+/*发送动态验证码*/
+export const reqCaptchas = () => ajax('/captcha')
+/*获取图片验证码*/
+export const sendCode = phone => ajax('/sendcode',{phone})
+/*手机号登录*/
+export const phoneLogin = ({phone,pwd}) => ajax('/phone_login',{phone,pwd},'POST')
+
+/*动态密码登录*/
+export const actphoneLogin = ({phone,code,actpwd}) => ajax('/actphone_login',{phone},'POST')
 
 
 

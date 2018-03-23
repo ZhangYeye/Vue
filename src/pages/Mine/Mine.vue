@@ -18,30 +18,34 @@
     </div>
     <div class="content">
       <div class="form">
+        <!--手机号登录-->
         <div class="type phone-login" :class="{setType:LoginType}">
           <div class="phone">
             <i class="iconfont icon-iconfontshouji" ></i>
-            <input type="text" placeholder="手机/用户名/邮箱">
+            <input type="text" maxlength="11" placeholder="手机/用户名/邮箱" v-model="phone">
           </div>
           <div>
             <i class="iconfont icon-mimamw"></i>
-            <input type="text" placeholder="输入密码">
+            <input type="text" placeholder="输入密码" v-model="pwd">
           </div>
         </div>
+        <!--用户密码登录-->
         <div class="type message-login" :class="{setType:!LoginType}">
           <div class="phoned">
             <i class="iconfont icon-iconfontshouji"></i>
-            <input type="text" placeholder="已注册的手机号">
+            <input type="text" maxlength="11" placeholder="已注册的手机号" v-model="phone">
           </div>
           <div class="imgCode">
             <i class="iconfont icon-mimamw"></i>
-            <input type="text" placeholder="请输入图片内容">
-            <div class="Code"></div>
+            <input type="text" placeholder="请输入图片内容" v-model="code">
+            <div class="Code" ><img src="http://localhost:3000/captcha" alt="" @click="getcaptcha"></div>
           </div>
           <div class="reactCode">
             <i class="iconfont icon-mimamw"></i>
-            <input type="text" placeholder="动态密码">
-            <button class="getCode">获取动态密码</button>
+            <input type="text" placeholder="动态密码" v-model="actpwd">
+            <button v-show="!computedTime" class="getCode" :class="{right_phone:rightPhone}"
+                    @click="getActCode">获取动态密码</button>
+            <button v-show="computedTime" disabled="disabled" class="getCode">{{computedTime}}s</button>
           </div>
         </div>
         <p class="forget">忘记密码？</p>
@@ -55,20 +59,68 @@
         <img src="../../common/images/qq.png" alt="">
       </div>
     </div>
+    <AlertTip v-if="showAlert" @closeTip="closeTip"/>
   </div>
 </template>
 <script>
-
+  import {sendCode} from '../../api'
+  import AlertTip from '../../components/AlertTip/AlertTip.vue'
   export default {
     data () {
       return{
-        LoginType :true
+        LoginType :true,
+        computedTime:0,
+        phone:'',
+        pwd:'',
+        code:'',
+        actpwd:'',
+        showAlert:false,
+        alertText:''
+      }
+    },
+    computed:{
+      rightPhone () {
+//        以1开头的11 位数
+        return /^1\d{10}$/.test(this.phone)
       }
     },
     methods:{
       setLoginType (LoginType) {
         this.LoginType = LoginType
+      },
+      closeTip () {
+        this.showAlert = false
+      },
+      getcaptcha (event) {
+        event.target.src = 'http://localhost:3000/captcha?time='+new Date()
+      },
+
+      /*点击获取开始倒计时*/
+      async getActCode () {
+        //开始倒计时
+        if(this.rightPhone){
+          this.computedTime = 60
+          // 启动循环定时器
+          const intervalId = setInterval(() => {
+            this.computedTime--
+            // 如果到时停止计时
+            if(this.computedTime === 0){
+              clearInterval(intervalId)
+            }
+          },1000)
+          // 发送ajax请，像手机发送验证码
+         /* const result = await sendCode(this.phone)
+          if(result.code === 1){
+            clearInterval(intervalId)
+            // 显示提示框
+            this.showAlert = true
+            this.alertText = result.msg
+          }*/
+        }
       }
+    },
+    components:{
+      AlertTip
     }
 
   }
@@ -164,25 +216,31 @@
                 line-height 50px
                 color #BCBCBC
                 font-size 12px
-                .imgCode
-                  position absolute
-                  width 80px
-                  height 30px
-                  background red
-                  right 10px
-                  top 4px
+                &.imgCode
+                  .Code
+                    position absolute
+                    top 14px
+                    right 10px
+                    display inline-block
+                    width 90px
+                    height 60px
+                    >img
+                      width 100%
                 &.reactCode
                   position relative
                   .getCode
                     position absolute
                     /*padding 5px 10px*/
                     box-sizing border-box
-                    border 1px solid red
-                    color red
+                    border 1px solid #ffffff
+                    color #000
                     border-radius 4px
                     background transparent
-                    top 4px
+                    top 14px
                     right 10px
+                    &.right_phone
+                      background #4ABDAC
+                      color #fff
 
           .forget
             position absolute
